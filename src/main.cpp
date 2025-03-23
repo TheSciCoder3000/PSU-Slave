@@ -22,7 +22,7 @@ void setCurrent(int index, float current);
 void read(int index);
 void toggle(int index, bool state);
 
-String received = "";
+
 String requestOutput = "";
 
 void setup()
@@ -39,45 +39,44 @@ void setup()
 
 void loop()
 {
-  delay(100);
   // Serial.println("Loop");
   if (i2cAvailable)
   {
     i2cAvailable = false;
 
-    String outputType = received.substring(1, 5); // select the first 4 characters of command
-    Serial.println(received);
-    int index = received.substring(0, 1).toInt();
+    // String outputType = received.substring(1, 5); // select the first 4 characters of command
+    // Serial.println(received);
+    // int index = received.substring(0, 1).toInt();
 
-    if (outputType == "SETV")
-    {
-      float voltage = received.substring(5, received.length()).toFloat();
-      setVoltage(index, voltage);
-      Serial.println("SETV: " + String(voltage));
-    }
-    else if (outputType == "SETA")
-    {
-      float curr = received.substring(5, received.length()).toFloat();
-      setCurrent(index, curr);
-      Serial.println("SETA: " + String(curr));
-    }
-    else if (outputType == "READ")
-    {
-      read(index);
-      Serial.println("READSLAVE ");
-    }
-    else if (outputType == "TOGG")
-    {
+    // if (outputType == "SETV")
+    // {
+    //   float voltage = received.substring(5, received.length()).toFloat();
+    //   setVoltage(index, voltage);
+    //   Serial.println("SETV: " + String(voltage));
+    // }
+    // else if (outputType == "SETA")
+    // {
+    //   float curr = received.substring(5, received.length()).toFloat();
+    //   setCurrent(index, curr);
+    //   Serial.println("SETA: " + String(curr));
+    // }
+    // else if (outputType == "READ")
+    // {
+    //   read(index);
+    //   Serial.println("READSLAVE ");
+    // }
+    // else if (outputType == "TOGG")
+    // {
 
-      int state = received.substring(5, 6).toInt();
-      toggle(index, state);
+    //   int state = received.substring(5, 6).toInt();
+    //   toggle(index, state);
 
-      Serial.println("TOGG: " + String(index));
-    }
-    else
-    {
-      Serial.println("Invalid: " + received);
-    }
+    //   Serial.println("TOGG: " + String(index));
+    // }
+    // else
+    // {
+    //   Serial.println("Invalid: " + received);
+    // }
   }
 }
 
@@ -85,11 +84,48 @@ void loop()
 // this function is registered as an event, see setup()
 void receiveEvent(int howMany)
 {
-  while(Wire.available()) // loop through all but the last
+
+  String received = "";
+
+  while (Wire.available())
   {
     char c = Wire.read(); // receive byte as a character
-    Serial.print(c);         // print the character
-  }      // print the integer
+    received += c;      // print the character
+  } // print the integer
+
+  String outputType = received.substring(1, 5); // select the first 4 characters of command
+  Serial.println(received);
+  int index = received.substring(0, 1).toInt();
+
+  if (outputType == "SETV")
+  {
+    float voltage = received.substring(5, received.length()).toFloat();
+    setVoltage(index, voltage);
+    Serial.println("SETV: " + String(voltage));
+  }
+  else if (outputType == "SETA")
+  {
+    float curr = received.substring(5, received.length()).toFloat();
+    setCurrent(index, curr);
+    Serial.println("SETA: " + String(curr));
+  }
+  else if (outputType == "READ")
+  {
+    read(index);
+    Serial.println("READSLAVE ");
+  }
+  else if (outputType == "TOGG")
+  {
+
+    int state = received.substring(5, 6).toInt();
+    toggle(index, state);
+
+    Serial.println("TOGG: " + String(index));
+  }
+  else
+  {
+    Serial.println("Invalid: " + received);
+  }
 }
 
 void requestEvent()
