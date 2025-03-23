@@ -16,7 +16,7 @@ public:
     void begin(unsigned long baud, HardwareSerial *serial);
     void setVoltage(float v);
     void setCurrent(float a);
-    void toggle();
+    void toggle(bool state);
     void read();
     void awaitResponse();
 

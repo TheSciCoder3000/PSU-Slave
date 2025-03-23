@@ -44,13 +44,13 @@ void XY6015::read()
     createFrame(0x00, 14, "READ");
 }
 
-void XY6015::toggle()
+
+void XY6015::toggle(bool state)
 {
-    status = !status;
 
-    createFrame(0x0012, ((status) ? 0x0001 : 0x0000), "SET");
+    createFrame(0x0012, state, "SET");
 
-    Serial.println("TOGGLED: " + String(status));
+    Serial.println("TOGGLED: " + String(state));
 }
 
 void XY6015::createFrame(byte add, int val, String mode)
